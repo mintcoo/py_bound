@@ -1,7 +1,7 @@
 class Bomb:
-    animation_frames = 5
+    animation_frames = 3
     animation_index = 0
-    animation_delay = 10
+    animation_delay = 5
     animation_delay_count = animation_delay
 
     def __init__(self, position, screen, IMAGE):
@@ -29,7 +29,15 @@ class Bomb:
             return
 
         self.animation_index += 1
+        # 프레임 변경
         if self.animation_index >= self.animation_frames:
             self.animation_index = 0
 
         self.animation_delay_count = self.animation_delay
+
+        # 투명도
+        # alpha = 0
+        # if self.animation_index > 0:
+        #     alpha = 255 * ((self.animation_index + 1) / 10)
+
+        # self.image.set_alpha(alpha)

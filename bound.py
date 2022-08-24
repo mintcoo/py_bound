@@ -80,16 +80,6 @@ mouse_draw = False
 # 폰트 정의
 game_font = pygame.font.Font(None, 30)  # 폰트 객체 생성 (폰트, 크기)
 
-# 폭탄이미지
-bound_list = []
-for bomb in range(8):
-    bound = pygame.image.load(os.path.join(image_path, "bomb01.png"))
-    bound_size = bound.get_rect().size
-    bound_stage = [400, 500, 600, 700, 800, 900, 1000, 1100]
-    bound_x_pos = bound_stage[bomb]
-    bound_y_pos = 50
-    bound_list.append([bound, bound_x_pos, bound_y_pos])
-
 IMAGE = {}
 # load resources
 for (dirpath, dirnames, filenames) in os.walk(f"resources/images"):
@@ -248,13 +238,7 @@ while switch:
     character_rect.left = character_x_pos
     character_rect.top = character_y_pos
 
-    bound_rect = bound.get_rect()
-    bound_rect.left = bound_x_pos
-    bound_rect.top = bound_y_pos
-
     # 충돌 체크
-    if character_rect.colliderect(bound_rect):
-        print("충돌함")
 
     # 5. 화면에 그리기
     screen.blit(background, (0, 0))
