@@ -12,15 +12,24 @@ class Bomb:
         self.IMAGE = IMAGE
 
         self.sprites = [IMAGE["over1.png"], IMAGE["over2.png"], IMAGE["over3.png"], IMAGE["over4.png"]]
-        # self.sprites = [IMAGE["bomb01.png"], IMAGE["bomb02.png"], IMAGE["bomb03.png"], IMAGE["bomb04.png"],
-        #                 IMAGE["bomb05.png"]]
+        self.sprites = [IMAGE["bomb01.png"], IMAGE["bomb02.png"], IMAGE["bomb03.png"], IMAGE["bomb04.png"],
+                        IMAGE["bomb05.png"]]
+
+        self.reset()
+
+    def reset(self):
         self.image = self.sprites[0]
+        self.animated = False
+        self.animation_index = 0
 
     def set_image(self, image):
         self.image = image
 
     def update(self):
         self.animate()
+
+        if self.animation_index + 1 == self.sprites.__len__():
+            self.animated = True
 
     def animate(self):
         if self.animation_delay_count > 0:

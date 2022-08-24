@@ -1,12 +1,12 @@
 import os
-import pygame
-from extra_bound_pattern import bound_1
 
+import pygame
 #################################################################
 # 기본 초기화 (반드시 해야 하는 것들)
 # 초기화 ( 그냥 반드시 필요 )
-from src.bomb import Bomb
-from src.stage import Stage
+
+from src.PatternMaker import PatternMaker
+from src.Stage import Stage
 
 pygame.init()
 
@@ -87,9 +87,11 @@ for (dirpath, dirnames, filenames) in os.walk(f"resources/images"):
     for filename in filenames:
         IMAGE[f"{filename}"] = pygame.image.load(f"{dirpath}/{filename}")
 
+pattern_maker = PatternMaker(screen, IMAGE)
+
 # 폭탄 초기화
-bombs = [Bomb((400, 50), screen, IMAGE), Bomb((500, 50), screen, IMAGE)]
-stage = Stage(bombs, screen)
+patterns = pattern_maker.create()
+stage = Stage(patterns, screen)
 # 시작 시간 정보
 start_ticks = pygame.time.get_ticks()  # 시작 tick을 받아옴
 
@@ -253,7 +255,7 @@ while switch:
     screen.blit(timer, (10, 10))
 
     # bound_1(bound_pattern, bound, bound_list, screen)
-    stage.update()
+    stage.update(delta_time)
 
     if mouse_draw == True:
         screen.blit(
