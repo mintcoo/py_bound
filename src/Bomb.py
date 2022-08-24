@@ -11,9 +11,12 @@ class Bomb:
         self.screen = screen
         self.IMAGE = IMAGE
 
-        self.sprites = [IMAGE["over1.png"], IMAGE["over2.png"], IMAGE["over3.png"], IMAGE["over4.png"]]
+        # self.sprites = [IMAGE["over1.png"], IMAGE["over2.png"], IMAGE["over3.png"], IMAGE["over4.png"]]
         self.sprites = [IMAGE["bomb01.png"], IMAGE["bomb02.png"], IMAGE["bomb03.png"], IMAGE["bomb04.png"],
                         IMAGE["bomb05.png"]]
+
+        for index, sprite in enumerate(self.sprites):
+            self.sprites[index] = pygame.transform.scale(sprite, (100, 100))
 
         self.reset()
 
@@ -52,5 +55,4 @@ class Bomb:
 
         self.set_image(self.sprites[self.animation_index])
         self.image.set_alpha(alpha)
-        self.image = pygame.transform.scale(self.image, (100, 100))
         self.screen.blit(self.image, self.position)
