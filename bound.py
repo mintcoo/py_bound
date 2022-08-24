@@ -6,6 +6,7 @@ from extra_bound_pattern import bound_1
 # 기본 초기화 (반드시 해야 하는 것들)
 # 초기화 ( 그냥 반드시 필요 )
 from src.bomb import Bomb
+from src.stage import Stage
 
 pygame.init()
 
@@ -39,8 +40,8 @@ zone = pygame.image.load(os.path.join(image_path, "zone.png"))
 zone_size = zone.get_rect().size
 
 # 스테이지 만들기
-stage = pygame.image.load(os.path.join(image_path, "stage.png"))
-stage_size = stage.get_rect().size
+stage_image = pygame.image.load(os.path.join(image_path, "stage.png"))
+stage_size = stage_image.get_rect().size
 stage_width = stage_size[0]
 stage_height = stage_size[1]
 
@@ -88,7 +89,7 @@ for (dirpath, dirnames, filenames) in os.walk(f"resources/images"):
 
 # 폭탄 초기화
 bombs = [Bomb((400, 50), screen, IMAGE), Bomb((500, 50), screen, IMAGE)]
-
+stage = Stage(bombs, screen)
 # 시작 시간 정보
 start_ticks = pygame.time.get_ticks()  # 시작 tick을 받아옴
 
@@ -118,8 +119,8 @@ while switch:
 
                 # 우상향
                 if (
-                    mouse_position[0] > character_x_pos
-                    and mouse_position[1] < character_y_pos
+                        mouse_position[0] > character_x_pos
+                        and mouse_position[1] < character_y_pos
                 ):
                     move_switch_R = True
                     move_switch_U = True
@@ -136,8 +137,8 @@ while switch:
 
                 # 우하향
                 if (
-                    mouse_position[0] > character_x_pos
-                    and mouse_position[1] > character_y_pos
+                        mouse_position[0] > character_x_pos
+                        and mouse_position[1] > character_y_pos
                 ):
                     move_switch_R = True
                     move_switch_D = True
@@ -155,8 +156,8 @@ while switch:
 
                 # 좌상향
                 if (
-                    mouse_position[0] < character_x_pos
-                    and mouse_position[1] < character_y_pos
+                        mouse_position[0] < character_x_pos
+                        and mouse_position[1] < character_y_pos
                 ):
                     move_switch_L = True
                     move_switch_U = True
@@ -173,8 +174,8 @@ while switch:
 
                 # 좌하향
                 if (
-                    mouse_position[0] < character_x_pos
-                    and mouse_position[1] > character_y_pos
+                        mouse_position[0] < character_x_pos
+                        and mouse_position[1] > character_y_pos
                 ):
                     move_switch_L = True
                     move_switch_D = True
@@ -243,7 +244,7 @@ while switch:
     # 5. 화면에 그리기
     screen.blit(background, (0, 0))
     screen.blit(zone, (100, 20))
-    screen.blit(stage, (400, 50))
+    screen.blit(stage_image, (400, 50))
 
     bound_pattern = int((pygame.time.get_ticks() - start_ticks) / 1000)
     # 밀리세컨드라(ms) 환산하기 위해서 1000으로 나누어서 초(s) 단위로 표시
@@ -252,8 +253,7 @@ while switch:
     screen.blit(timer, (10, 10))
 
     # bound_1(bound_pattern, bound, bound_list, screen)
-    for bomb in bombs:
-        bomb.update()
+    stage.update()
 
     if mouse_draw == True:
         screen.blit(
