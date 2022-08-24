@@ -1,5 +1,3 @@
-
-
 def bound_1(bound_pattern, bound, bound_list, screen):
 
     if bound_pattern % 16 == 1:
