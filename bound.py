@@ -268,6 +268,14 @@ while switch:
         (character_x_pos - character_width / 2, character_y_pos - character_height / 2),
     )
 
+    if type(stage.current_pattern).__name__ == 'list':
+        for bomb in stage.current_pattern:
+            bomb_rect = pygame.Rect(bomb.position,bomb.image.get_size())
+            is_collision = character_rect.colliderect(bomb_rect)
+            if is_collision:
+                character_x_pos = 30
+                character_y_pos = 30
+
     pygame.display.update()  # 게임화면을 다시 그리기! (while 동안 계쏙 돌면서 화면을 다시 그림 필수임!)
 
 # pygame 종료

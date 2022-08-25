@@ -10,6 +10,7 @@ class Bomb:
         self.position = position
         self.screen = screen
         self.IMAGE = IMAGE
+        self.is_collider = True
 
         # self.sprites = [IMAGE["over1.png"], IMAGE["over2.png"], IMAGE["over3.png"], IMAGE["over4.png"]]
         self.sprites = [IMAGE["bomb01.png"], IMAGE["bomb02.png"], IMAGE["bomb03.png"], IMAGE["bomb04.png"],
