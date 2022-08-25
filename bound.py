@@ -269,8 +269,13 @@ while switch:
     )
 
     if type(stage.current_pattern).__name__ == 'list':
+        character_rect = character.get_rect()
+        character_rect.left = character_x_pos - character_width / 2
+        character_rect.top = character_y_pos - character_height / 2
         for bomb in stage.current_pattern:
-            bomb_rect = pygame.Rect(bomb.position,bomb.image.get_size())
+            if bomb.animation_index != 0:
+                continue
+            bomb_rect = pygame.Rect(bomb.position, bomb.image.get_size())
             is_collision = character_rect.colliderect(bomb_rect)
             if is_collision:
                 character_x_pos = 30
