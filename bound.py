@@ -80,14 +80,17 @@ mouse_draw = False
 
 # 폰트 정의
 game_font = pygame.font.Font(None, 30)  # 폰트 객체 생성 (폰트, 크기)
+RESOURCES = {
+    "IMAGE": {},
+    "AUDIO": {}
+}
 
-IMAGE = {}
 # load resources
 for (dirpath, dirnames, filenames) in os.walk(f"resources/images"):
     for filename in filenames:
-        IMAGE[f"{filename}"] = pygame.image.load(f"{dirpath}/{filename}")
+        RESOURCES["IMAGE"][f"{filename}"] = pygame.image.load(f"{dirpath}/{filename}")
 
-pattern_maker = PatternMaker(screen, IMAGE)
+pattern_maker = PatternMaker(screen, RESOURCES)
 
 # 폭탄 초기화
 patterns = pattern_maker.create()
@@ -241,20 +244,24 @@ while switch:
     character_rect.left = character_x_pos
     character_rect.top = character_y_pos
 
-    # 충돌 체크
-
     # 5. 화면에 그리기
     screen.blit(background, (0, 0))
     screen.blit(zone, (100, 20))
     screen.blit(stage_image, (400, 50))
 
-    bound_pattern = int((pygame.time.get_ticks() - start_ticks) / 1000)
-    # 밀리세컨드라(ms) 환산하기 위해서 1000으로 나누어서 초(s) 단위로 표시
+    # 시간 milliseconds
+    elapsed_time = int((pygame.time.get_ticks() - start_ticks))
 
-    timer = game_font.render(str(int(bound_pattern)), True, (255, 255, 255))
-    screen.blit(timer, (10, 10))
 
-    # bound_1(bound_pattern, bound, bound_list, screen)
+    def format_time(milliseconds):
+        time = milliseconds
+        time = f"{str((milliseconds // 1000) // (60)).zfill(2)} : {str((milliseconds // 1000) % (60)).zfill(2)} : {str(milliseconds % 1000 // 10).zfill(2)}"
+        return str(time)
+
+
+    timer = game_font.render(format_time(elapsed_time), True, (255, 255, 255))
+    screen.blit(timer, (screen_width / 2 - timer.get_width() / 2, 0))
+
     stage.update(delta_time)
 
     if mouse_draw == True:
@@ -268,6 +275,7 @@ while switch:
         (character_x_pos - character_width / 2, character_y_pos - character_height / 2),
     )
 
+    # 충돌 체크
     if type(stage.current_pattern).__name__ == 'list':
         character_rect = character.get_rect()
         character_rect.left = character_x_pos - character_width / 2

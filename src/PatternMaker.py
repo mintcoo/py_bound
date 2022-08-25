@@ -3,9 +3,10 @@ from src.Bomb import Bomb
 
 class PatternMaker:
 
-    def __init__(self, screen, IMAGE):
+    def __init__(self, screen, RESOURCES):
         self.screen = screen
-        self.IMAGE = IMAGE
+        self.RESOURCES = RESOURCES
+        self.IMAGE = RESOURCES["IMAGE"]
 
     def create(self):
         patterns = self.get_stage_one()
@@ -13,7 +14,7 @@ class PatternMaker:
 
             if type(pattern).__name__ == 'list':
                 for index, position in enumerate(pattern):
-                    pattern[index] = Bomb(position, self.screen, self.IMAGE)
+                    pattern[index] = Bomb(position, self.screen, self.RESOURCES)
 
         return patterns
 

@@ -6,12 +6,14 @@ class Bomb:
     animation_delay = 5
     animation_delay_count = animation_delay
 
-    def __init__(self, position, screen, IMAGE):
+    def __init__(self, position, screen, RESOURCES):
         self.position = position
         self.screen = screen
-        self.IMAGE = IMAGE
+        self.RESOURCES = RESOURCES
+        self.IMAGE = RESOURCES["IMAGE"]
         self.is_collider = True
 
+        IMAGE = self.IMAGE
         # self.sprites = [IMAGE["over1.png"], IMAGE["over2.png"], IMAGE["over3.png"], IMAGE["over4.png"]]
         self.sprites = [IMAGE["bomb01.png"], IMAGE["bomb02.png"], IMAGE["bomb03.png"], IMAGE["bomb04.png"],
                         IMAGE["bomb05.png"]]
