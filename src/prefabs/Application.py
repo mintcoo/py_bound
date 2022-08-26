@@ -2,21 +2,26 @@ import os
 
 import pygame
 
+from src.prefabs.MousePointer import MousePointer
+
 
 class Application:
     RESOURCES = {"IMAGE": {}, "AUDIO": {}}
 
     def __init__(self, size=(100, 100), fps=60, title="Untitled"):
 
-        # initialize
+        # initialize for just app
         pygame.init()
         self.screen = pygame.display.set_mode(size)
         self.size = size
         self.fps = fps
         self.delta_time = 0
+        self.is_running = False
 
         # 화면 타이틀 설정
         pygame.display.set_caption("Bound")
+
+        # 기타 초기화
         self.load_resources()
 
     def load_resources(self):

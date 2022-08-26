@@ -49,7 +49,7 @@ class Bomb:
     def play_explode(self):
         channel = pygame.mixer.get_num_channels()
         pygame.mixer.set_num_channels(channel + 1)
-        self.AUDIO["bomb.wav"].set_volume(0.3)
+        self.AUDIO["bomb.wav"].set_volume(0.1)
         self.AUDIO["bomb.wav"].play()
 
     def animate(self):
