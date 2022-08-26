@@ -4,7 +4,9 @@ import pygame
 
 from src.prefabs.Application import Application
 from src.prefabs.PatternMaker import PatternMaker
+from src.prefabs.Player import Player
 from src.prefabs.Stage import Stage
+from src.utils.constants import M_RIGHT, FONT_PATH
 from src.utils.util import format_time
 
 
@@ -20,21 +22,12 @@ def run(size):
 
     # FPS
     clock = pygame.time.Clock()
-    #################################################################
-
-    # 1. 사용자 게임 초기화 (배경 화면, 게임 이미지, 좌표, 속도, 폰트 등)
-    current_path = os.path.dirname(os.curdir)  # 현재 파일의 위치를 반환
 
     # 캐릭터 만들기
-    character = RESOURCES["IMAGE"]["poong.png"]
-    character_size = character.get_rect().size
-    character_width = character_size[0]
-    character_height = character_size[1]
-    character_x_pos = 150
-    character_y_pos = 100
-
-    # 캐릭터 스피드
-    character_speed = 0.1
+    character = Player(app)
+    character.set_position((150, 100))
+    character_x_pos = character.position[0]
+    character_y_pos = character.position[1]
 
     # 캐릭터 이동 좌표
     to_x = 0
@@ -59,7 +52,7 @@ def run(size):
     mouse_draw = False
 
     # 폰트 정의
-    game_font = pygame.font.Font(None, 30)  # 폰트 객체 생성 (폰트, 크기)
+    game_font = pygame.font.Font(FONT_PATH, 30)  # 폰트 객체 생성 (폰트, 크기)
     pattern_maker = PatternMaker(app)
 
     # 폭탄 초기화
@@ -71,7 +64,8 @@ def run(size):
     # 이벤트 루프
     switch = True  # 게임이 진행중인가?
     while switch:
-        delta_time = clock.tick(60)  # 게임화면의 초당 프레임수를 설정
+        delta_time = clock.tick(app.fps)  # 게임화면의 초당 프레임수를 설정
+        app.set_delta_time(delta_time)
 
         # 2. 이벤트 처리 (키보드, 마우스 등)
         for event in pygame.event.get():  # 어떤 이벤트가 발생하였는가?
@@ -79,7 +73,7 @@ def run(size):
                 switch = False  # 게임이 진행중이 아님
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 3:
+                if event.button == M_RIGHT:
                     mouse_position = pygame.mouse.get_pos()
                     mouse_draw = True
                     move_switch_R = False
@@ -100,15 +94,15 @@ def run(size):
                         move_switch_R = True
                         move_switch_U = True
                         if left_right > up_down:
-                            to_x += character_speed
-                            to_y -= character_speed * up_down / left_right
+                            to_x += character.speed
+                            to_y -= character.speed * up_down / left_right
 
                         elif left_right == up_down:
-                            to_x += character_speed
-                            to_y -= character_speed
+                            to_x += character.speed
+                            to_y -= character.speed
                         elif left_right < up_down:
-                            to_x += character_speed * left_right / up_down
-                            to_y -= character_speed
+                            to_x += character.speed * left_right / up_down
+                            to_y -= character.speed
 
                     # 우하향
                     if (
@@ -118,16 +112,16 @@ def run(size):
                         move_switch_R = True
                         move_switch_D = True
                         if left_right > up_down:
-                            to_x += character_speed
-                            to_y += character_speed * up_down / left_right
+                            to_x += character.speed
+                            to_y += character.speed * up_down / left_right
 
                         elif left_right == up_down:
-                            to_x += character_speed
-                            to_y += character_speed
+                            to_x += character.speed
+                            to_y += character.speed
 
                         elif left_right < up_down:
-                            to_x += character_speed * left_right / up_down
-                            to_y += character_speed
+                            to_x += character.speed * left_right / up_down
+                            to_y += character.speed
 
                     # 좌상향
                     if (
@@ -137,15 +131,15 @@ def run(size):
                         move_switch_L = True
                         move_switch_U = True
                         if left_right > up_down:
-                            to_x -= character_speed
-                            to_y -= character_speed * up_down / left_right
+                            to_x -= character.speed
+                            to_y -= character.speed * up_down / left_right
 
                         elif left_right == up_down:
-                            to_x -= character_speed
-                            to_y -= character_speed
+                            to_x -= character.speed
+                            to_y -= character.speed
                         elif left_right < up_down:
-                            to_x -= character_speed * left_right / up_down
-                            to_y -= character_speed
+                            to_x -= character.speed * left_right / up_down
+                            to_y -= character.speed
 
                     # 좌하향
                     if (
@@ -155,16 +149,16 @@ def run(size):
                         move_switch_L = True
                         move_switch_D = True
                         if left_right > up_down:
-                            to_x -= character_speed
-                            to_y += character_speed * up_down / left_right
+                            to_x -= character.speed
+                            to_y += character.speed * up_down / left_right
 
                         elif left_right == up_down:
-                            to_x -= character_speed
-                            to_y += character_speed
+                            to_x -= character.speed
+                            to_y += character.speed
 
                         elif left_right < up_down:
-                            to_x -= character_speed * left_right / up_down
-                            to_y += character_speed
+                            to_x -= character.speed * left_right / up_down
+                            to_y += character.speed
 
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 3:
@@ -240,18 +234,18 @@ def run(size):
             )
 
         screen.blit(
-            character,
+            character.image,
             (
-                character_x_pos - character_width / 2,
-                character_y_pos - character_height / 2,
+                character_x_pos - character.size[0] / 2,
+                character_y_pos - character.size[1] / 2,
             ),
         )
 
         # 충돌 체크
         if type(stage.current_pattern).__name__ == "list":
             character_rect = character.get_rect()
-            character_rect.left = character_x_pos - character_width / 2
-            character_rect.top = character_y_pos - character_height / 2
+            character_rect.left = character_x_pos - character.size[0] / 2
+            character_rect.top = character_y_pos - character.size[1] / 2
             for bomb in stage.current_pattern:
                 if bomb.animation_index != 0:
                     continue

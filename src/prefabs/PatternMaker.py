@@ -8,7 +8,7 @@ class PatternMaker:
         self.RESOURCES = app.RESOURCES
         self.IMAGE = app.RESOURCES["IMAGE"]
 
-    def create(self):
+    def create(self, patterns=[]):
         patterns = self.get_stage_one()
         for pattern in patterns:
 
