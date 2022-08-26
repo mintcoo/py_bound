@@ -16,6 +16,7 @@ def run(size):
     RESOURCES = app.RESOURCES
     screen = app.screen
     game_font = pygame.font.Font(FONT_PATH, 30)  # 폰트 객체 생성 (폰트, 크기)
+    board_font = pygame.font.Font(FONT_PATH, 12)  # 폰트 객체 생성 (폰트, 크기)
     start_ticks = pygame.time.get_ticks()  # 시작 tick을 받아옴
     clock = pygame.time.Clock()  # FPW
 
@@ -51,16 +52,25 @@ def run(size):
     walls.append(pygame.Rect((stage_rect.x, stage_rect.y), (stage_rect.width, 1)))
     walls.append(pygame.Rect((stage_rect.x, stage_rect.y + stage_rect.height), (stage_rect.width, 1)))
 
+    # 골인지점
+    goal_rect = pygame.Rect((1210, 50), (100, 100))
+
     # 패턴 생성
     pattern_maker = PatternMaker(app)
-    patterns = pattern_maker.create()
+    patterns = pattern_maker.create(pattern_maker.get_stage(0))
     stage = Stage(patterns, app)
+    stage_index = 0
+
+    # ...
+    clear_elapsed_time = 0
+    clear_times = []
 
     # 이벤트 루프
     app.is_running = True  # 게임이 진행중인가?
     while app.is_running:
         delta_time = clock.tick(app.fps)  # 게임화면의 초당 프레임수를 설정
         app.set_delta_time(delta_time)
+        clear_elapsed_time += delta_time
 
         # 2. 이벤트 처리 (키보드, 마우스 등)
         for event in pygame.event.get():  # 어떤 이벤트가 발생하였는가?
@@ -76,13 +86,18 @@ def run(size):
         # 충돌
         for wall in walls:
             # 벽 보기용 코드
-            # pygame.draw.rect(screen, (255, 0, 0), wall)
+            pygame.draw.rect(screen, (255, 0, 0), wall)
             if wall.colliderect(character.rect):
                 character.on_collision()
 
         # 오브젝트 업데이트
         character.update()
         stage.update(delta_time)
+        for object in app.game_objects:
+            if object.animated:
+                app.game_objects.remove(object)
+                continue
+            object.update()
 
         # 타이머 업데이트
         elapsed_time = int((pygame.time.get_ticks() - start_ticks))
@@ -91,14 +106,32 @@ def run(size):
 
         # 충돌 체크
         if type(stage.current_pattern).__name__ == "list":
-            character_rect = character.rect
             for bomb in stage.current_pattern:
                 if bomb.animation_index != 0:
                     continue
                 bomb_rect = pygame.Rect(bomb.position, bomb.image.get_size())
-                is_collision = character_rect.colliderect(bomb_rect)
+                is_collision = character.rect.colliderect(bomb_rect)
                 if is_collision:
                     character.death()
+
+        # 골지점들어감
+        if goal_rect.contains(character.rect):
+            character.reset()
+            character.set_position([150, 100])
+            stage_index += 1
+            patterns = pattern_maker.create(pattern_maker.get_stage(stage_index))
+            stage = Stage(patterns, app)
+            clear_times.append(clear_elapsed_time)
+            clear_elapsed_time = 0
+
+        # clear board
+        for index, clear_time in enumerate(clear_times):
+            board_text = board_font.render((f"Stage {str(index + 1).zfill(2)} - {format_time(clear_time)}"), True,
+                                           (255, 255, 255))
+            board_background = pygame.Surface(board_text.get_size())
+            board_background.fill((0, 0, 0))
+            board_background.blit(board_text, (0, 0))
+            screen.blit(board_background, (0, screen.get_height() - board_text.get_height() * (index + 1)))
 
         pygame.display.update()  # 게임화면을 다시 그리기! (while 동안 계쏙 돌면서 화면을 다시 그림 필수임!)
 

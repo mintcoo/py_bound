@@ -16,9 +16,9 @@ class Stage:
         if class_name == "list":
             is_completed = self.explode_bombs(pattern)
             if is_completed:
-                self.next_pattern()
                 for bomb in pattern:
                     bomb.reset()
+            self.next_pattern()
 
         if class_name == "int":
             destination_wait = pattern
@@ -29,7 +29,8 @@ class Stage:
     def explode_bombs(self, bombs):
         is_completed = True
         for bomb in bombs:
-            bomb.update()
+            # bomb.update()
+            self.app.game_objects.append(bomb)
 
             if is_completed == False:
                 continue
@@ -44,6 +45,10 @@ class Stage:
             self.pattern_index = 0
 
         self.current_pattern = self.patterns[self.pattern_index]
+        if type(self.current_pattern).__name__ == 'list':
+            for pattern in self.current_pattern:
+                pattern.reset()
+
         self.waited = 0
 
     def update(self, delta_time):

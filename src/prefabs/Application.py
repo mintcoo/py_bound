@@ -17,6 +17,7 @@ class Application:
         self.fps = fps
         self.delta_time = 0
         self.is_running = False
+        self.game_objects = []
 
         # 화면 타이틀 설정
         pygame.display.set_caption("Bound")

@@ -21,6 +21,7 @@ class MousePointer:
                 self.on_click_right_button(mouse_position)
 
     def on_click_right_button(self, position):
+        #print(position)
         self.position = position
         self.preserve_time_count = self.preserve_time
         self.parent.forward(position)
