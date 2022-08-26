@@ -40,8 +40,16 @@ def run(size):
     character.set_position((150, 100))
 
     # 못넘어가게 막는 벽 생성
+    wall_point_size = 1
     walls = []
-    walls.append(pygame.Rect((zone_rect.x - 1, zone_rect.y - 1), (zone_rect.width, 1)))
+    walls.append(pygame.Rect((zone_rect.x, zone_rect.y), (zone_rect.width, wall_point_size)))
+    walls.append(pygame.Rect((zone_rect.x, zone_rect.y + zone_rect.height), (zone_rect.width, wall_point_size)))
+    walls.append(pygame.Rect((zone_rect.x, zone_rect.y), (wall_point_size, zone_rect.height)))
+    walls.append(pygame.Rect((zone_rect.x + zone_rect.width - 1, zone_rect.y), (wall_point_size, 30)))
+    walls.append(
+        pygame.Rect((zone_rect.x + zone_rect.width - 1, zone_rect.y + stage_rect.height + 30), (wall_point_size, 50)))
+    walls.append(pygame.Rect((stage_rect.x, stage_rect.y), (stage_rect.width, 1)))
+    walls.append(pygame.Rect((stage_rect.x, stage_rect.y + stage_rect.height), (stage_rect.width, 1)))
 
     # 패턴 생성
     pattern_maker = PatternMaker(app)
@@ -66,8 +74,11 @@ def run(size):
         screen.blit(stage_image, stage_rect)
 
         # 충돌
-        if not zone_rect.contains(character.rect):
-            character.on_collision()
+        for wall in walls:
+            # 벽 보기용 코드
+            # pygame.draw.rect(screen, (255, 0, 0), wall)
+            if wall.colliderect(character.rect):
+                character.on_collision()
 
         # 오브젝트 업데이트
         character.update()
