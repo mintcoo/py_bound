@@ -41,7 +41,7 @@ def run(size):
 
     # 못넘어가게 막는 벽 생성
     walls = []
-    pygame.Rect(zone)
+    # pygame.Rect(zone)
 
     # 패턴 생성
     pattern_maker = PatternMaker(app)
