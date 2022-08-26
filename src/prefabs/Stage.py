@@ -3,8 +3,9 @@ class Stage:
     pattern_index = 0
     waited = 0
 
-    def __init__(self, patterns, screen):
-        self.screen = screen
+    def __init__(self, patterns, app):
+        self.app = app
+        self.screen = self.app.screen
 
         self.patterns = patterns
         self.current_pattern = self.patterns[self.pattern_index]
@@ -12,14 +13,14 @@ class Stage:
     def trigger(self, pattern, delta_time):
         class_name = type(pattern).__name__
 
-        if class_name == 'list':
+        if class_name == "list":
             is_completed = self.explode_bombs(pattern)
             if is_completed:
                 self.next_pattern()
                 for bomb in pattern:
                     bomb.reset()
 
-        if class_name == 'int':
+        if class_name == "int":
             destination_wait = pattern
             self.waited += delta_time
             if self.waited >= destination_wait:

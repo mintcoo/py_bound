@@ -1,20 +1,20 @@
-from src.Bomb import Bomb
+from src.prefabs.Bomb import Bomb
 
 
 class PatternMaker:
-
-    def __init__(self, screen, RESOURCES):
-        self.screen = screen
-        self.RESOURCES = RESOURCES
-        self.IMAGE = RESOURCES["IMAGE"]
+    def __init__(self, app):
+        self.app = app
+        self.screen = self.app.screen
+        self.RESOURCES = app.RESOURCES
+        self.IMAGE = app.RESOURCES["IMAGE"]
 
     def create(self):
         patterns = self.get_stage_one()
         for pattern in patterns:
 
-            if type(pattern).__name__ == 'list':
+            if type(pattern).__name__ == "list":
                 for index, position in enumerate(pattern):
-                    pattern[index] = Bomb(position, self.screen, self.RESOURCES)
+                    pattern[index] = Bomb(position, self.app)
 
         return patterns
 
@@ -55,10 +55,24 @@ class PatternMaker:
             400,
             [location1, location2, location3, location4],
             400,
-
-            [location1, location2, location3, location5, location6, location7, location8],
-            400,
-
-            [location1, location2, location4, location5, location6, location7, location8],
+            [
+                location1,
+                location2,
+                location3,
+                location5,
+                location6,
+                location7,
+                location8,
+            ],
+            700,
+            [
+                location1,
+                location2,
+                location4,
+                location5,
+                location6,
+                location7,
+                location8,
+            ],
             400,
         ]
