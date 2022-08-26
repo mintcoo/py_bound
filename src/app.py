@@ -41,7 +41,7 @@ def run(size):
 
     # 못넘어가게 막는 벽 생성
     walls = []
-    # pygame.Rect(zone)
+    walls.append(pygame.Rect((zone_rect.x - 1, zone_rect.y - 1), (zone_rect.width, 1)))
 
     # 패턴 생성
     pattern_maker = PatternMaker(app)
@@ -64,6 +64,10 @@ def run(size):
         screen.blit(background, (0, 0))
         screen.blit(zone, zone_rect)
         screen.blit(stage_image, stage_rect)
+
+        # 충돌
+        if not zone_rect.contains(character.rect):
+            character.on_collision()
 
         # 오브젝트 업데이트
         character.update()
