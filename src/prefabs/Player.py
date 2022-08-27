@@ -1,15 +1,25 @@
 import pygame
 
 from src.prefabs.MousePointer import MousePointer
+from src.utils.spritesheet import SpriteSheet
 
 
 class Player:
     speed = 0.1
     offset = [0, 0]
+    sprites_delay = 7
+    sprites_delay_count = sprites_delay
 
     def __init__(self, app):
         self.app = app
-        self.image = app.RESOURCES["IMAGE"]["poong.png"]
+        sheets = SpriteSheet(app.RESOURCES["IMAGE"]["poong-sheet.png"])
+        self.sprites = [
+            sheets.image_at((0, 0, 30, 30)),
+            sheets.image_at((30, 0, 30, 30)),
+            sheets.image_at((60, 0, 30, 30))
+        ]
+        self.sheet_index = 0
+        self.image = self.sprites[self.sheet_index]
 
         self.size = self.image.get_rect().size
         self.setup_mouse()
@@ -52,6 +62,15 @@ class Player:
     def on_collision(self):
         self.position = self.last_position
 
+    def update_sprites(self):
+        self.sprites_delay_count -= 1
+        if self.sprites_delay_count == 0:
+            self.sheet_index += 1
+            if self.sheet_index >= self.sprites.__len__():
+                self.sheet_index = 0
+            self.image = self.sprites[self.sheet_index]
+            self.sprites_delay_count = self.sprites_delay
+
     def update(self):
         screen = self.app.screen
         self.last_position = self.position
@@ -81,7 +100,7 @@ class Player:
                 self.set_pos_y(self.position[1] + (delta_speed * vertical_direction))
 
             if abs(self.position[0] - self.departure[0]) > abs(
-                self.destination[0] - self.departure[0]
+                    self.destination[0] - self.departure[0]
             ):
                 abs(self.position[0] - self.departure[0]) > abs(
                     self.destination[0] - self.departure[0]
@@ -89,10 +108,11 @@ class Player:
                 self.set_pos_x(self.destination[0])
 
             if abs(self.position[1] - self.departure[1]) > abs(
-                self.destination[1] - self.departure[1]
+                    self.destination[1] - self.departure[1]
             ):
                 self.set_pos_y(self.destination[1])
 
         screen.blit(self.image, self.rect)
 
         self.mouse.update()
+        self.update_sprites()
