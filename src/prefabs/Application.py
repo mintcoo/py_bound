@@ -42,7 +42,7 @@ class Application:
 
     def load_pattern_files(self):
         patterns_data = []
-        for (dirpath, dirnames, filenames) in os.walk(f"patterns"):
+        for (dirpath, dirnames, filenames) in os.walk(f"resources/patterns"):
             for filename in filenames:
                 try:
                     loaded_map = open(f"{dirpath}/{filename}", "r")
