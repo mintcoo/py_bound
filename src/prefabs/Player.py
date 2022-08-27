@@ -9,6 +9,7 @@ class Player:
     offset = [0, 0]
     sprites_delay = 7
     sprites_delay_count = sprites_delay
+    status = "neutral"
 
     def __init__(self, app):
         self.app = app
@@ -66,6 +67,13 @@ class Player:
         self.position = self.last_position
 
     def update_sprites(self):
+
+        if self.status == 'neutral':
+            self.sheet_index = 0
+            self.image = self.sprites[self.sheet_index]
+            self.sprites_delay_count = self.sprites_delay
+            return
+
         self.sprites_delay_count -= 1
         if self.sprites_delay_count == 0:
             self.sheet_index += 1
@@ -119,3 +127,10 @@ class Player:
 
         self.mouse.update()
         self.update_sprites()
+
+        if self.destination is not None:
+            self.status = 'run'
+
+        if self.destination is None or (self.position[0] == self.last_position[0] and self.position[1] == \
+                                        self.last_position[1]):
+            self.status = 'neutral'
