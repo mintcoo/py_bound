@@ -25,6 +25,8 @@ class Player:
         self.setup_mouse()
         self.offset = [self.image.get_width() / 2, self.image.get_height() / 2]
         self.set_position([0, 0])
+        self.death_bgm = self.app.RESOURCES["AUDIO"]["death1.mp3"]
+        self.death_bgm.set_volume(0.5)
 
         self.reset()
 
@@ -58,6 +60,7 @@ class Player:
     def death(self):
         self.reset()
         self.set_position([150, 100])
+        self.death_bgm.play()
 
     def on_collision(self):
         self.position = self.last_position
