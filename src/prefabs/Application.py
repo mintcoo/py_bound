@@ -1,3 +1,4 @@
+import json
 import os
 
 import pygame
@@ -24,6 +25,7 @@ class Application:
 
         # 기타 초기화
         self.load_resources()
+        self.load_pattern_files()
 
     def load_resources(self):
         for (dirpath, dirnames, filenames) in os.walk(f"resources/images"):
@@ -37,6 +39,29 @@ class Application:
                 self.RESOURCES["AUDIO"][f"{filename}"] = pygame.mixer.Sound(
                     f"{dirpath}/{filename}"
                 )
+
+    def load_pattern_files(self):
+        patterns_data = []
+        for (dirpath, dirnames, filenames) in os.walk(f"patterns"):
+            for filename in filenames:
+                try:
+                    loaded_map = open(f"{dirpath}/{filename}", "r")
+                    data = json.loads(loaded_map.read())
+                    patterns_data.append(self.json_to_pattern_data(data))
+                except Exception as error:
+                    print(f"{filename} - {error}")
+                    raise error
+
+        self.stages = patterns_data
+
+    def json_to_pattern_data(self, data):
+        patterns = []
+        for pattern in data['patterns']:
+            if type(pattern).__name__ == 'list':
+                pattern = list(map(lambda location_name: data['locations'][location_name], pattern))
+            patterns.append(pattern)
+
+        return patterns
 
     def set_delta_time(self, time):
         self.delta_time = time

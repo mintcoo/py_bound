@@ -1,12 +1,10 @@
-import os
-
 import pygame
 
 from src.prefabs.Application import Application
 from src.prefabs.PatternMaker import PatternMaker
 from src.prefabs.Player import Player
 from src.prefabs.Stage import Stage
-from src.utils.constants import M_RIGHT, FONT_PATH
+from src.utils.constants import FONT_PATH
 from src.utils.util import format_time
 
 
