@@ -21,7 +21,7 @@ class MousePointer:
                 self.on_click_right_button(mouse_position)
 
     def on_click_right_button(self, position):
-        #print(position)
+        # print(position)
         self.position = position
         self.preserve_time_count = self.preserve_time
         self.parent.forward(position)
@@ -32,7 +32,12 @@ class MousePointer:
             return
 
         screen = self.app.screen
-        screen.blit(self.image,
-                    (self.position[0] - self.image.get_width() / 2, self.position[1] - self.image.get_height() / 2))
+        screen.blit(
+            self.image,
+            (
+                self.position[0] - self.image.get_width() / 2,
+                self.position[1] - self.image.get_height() / 2,
+            ),
+        )
 
         self.preserve_time_count -= self.app.delta_time

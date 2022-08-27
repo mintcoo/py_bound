@@ -56,25 +56,41 @@ class Player:
         screen = self.app.screen
         self.last_position = self.position
         if self.destination is not None:
-            horizontal_direction = 1 if self.destination[0] - self.departure[0] > 0 else -1
-            vertical_direction = 1 if self.destination[1] - self.departure[1] > 0 else -1
+            horizontal_direction = (
+                1 if self.destination[0] - self.departure[0] > 0 else -1
+            )
+            vertical_direction = (
+                1 if self.destination[1] - self.departure[1] > 0 else -1
+            )
 
             distance_x = abs(self.destination[0] - self.departure[0])
             distance_y = abs(self.destination[1] - self.departure[1])
             delta_speed = self.speed * self.app.delta_time
             if distance_x > distance_y:
                 self.set_pos_x(self.position[0] + (delta_speed * horizontal_direction))
-                self.set_pos_y(self.position[1] + ((distance_y / distance_x) * delta_speed * vertical_direction))
+                self.set_pos_y(
+                    self.position[1]
+                    + ((distance_y / distance_x) * delta_speed * vertical_direction)
+                )
 
             if distance_x < distance_y:
-                self.set_pos_x(self.position[0] + ((distance_x / distance_y) * delta_speed * horizontal_direction))
+                self.set_pos_x(
+                    self.position[0]
+                    + ((distance_x / distance_y) * delta_speed * horizontal_direction)
+                )
                 self.set_pos_y(self.position[1] + (delta_speed * vertical_direction))
 
-            if abs(self.position[0] - self.departure[0]) > abs(self.destination[0] - self.departure[0]):
-                abs(self.position[0] - self.departure[0]) > abs(self.destination[0] - self.departure[0])
+            if abs(self.position[0] - self.departure[0]) > abs(
+                self.destination[0] - self.departure[0]
+            ):
+                abs(self.position[0] - self.departure[0]) > abs(
+                    self.destination[0] - self.departure[0]
+                )
                 self.set_pos_x(self.destination[0])
 
-            if abs(self.position[1] - self.departure[1]) > abs(self.destination[1] - self.departure[1]):
+            if abs(self.position[1] - self.departure[1]) > abs(
+                self.destination[1] - self.departure[1]
+            ):
                 self.set_pos_y(self.destination[1])
 
         screen.blit(self.image, self.rect)

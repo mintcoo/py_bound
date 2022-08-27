@@ -45,7 +45,7 @@ class Stage:
             self.pattern_index = 0
 
         self.current_pattern = self.patterns[self.pattern_index]
-        if type(self.current_pattern).__name__ == 'list':
+        if type(self.current_pattern).__name__ == "list":
             for pattern in self.current_pattern:
                 pattern.reset()
 

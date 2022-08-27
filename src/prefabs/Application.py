@@ -56,9 +56,11 @@ class Application:
 
     def json_to_pattern_data(self, data):
         patterns = []
-        for pattern in data['patterns']:
-            if type(pattern).__name__ == 'list':
-                pattern = list(map(lambda location_name: data['locations'][location_name], pattern))
+        for pattern in data["patterns"]:
+            if type(pattern).__name__ == "list":
+                pattern = list(
+                    map(lambda location_name: data["locations"][location_name], pattern)
+                )
             patterns.append(pattern)
 
         return patterns

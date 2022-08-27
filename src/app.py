@@ -1,10 +1,12 @@
 import pygame
 
+from libs import ptext
 from src.prefabs.Application import Application
 from src.prefabs.PatternMaker import PatternMaker
 from src.prefabs.Player import Player
 from src.prefabs.Stage import Stage
 from src.utils.constants import FONT_PATH
+from src.utils.pretty_font import get_text
 from src.utils.util import format_time
 
 
@@ -15,6 +17,8 @@ def run(size):
     screen = app.screen
     game_font = pygame.font.Font(FONT_PATH, 30)  # 폰트 객체 생성 (폰트, 크기)
     board_font = pygame.font.Font(FONT_PATH, 12)  # 폰트 객체 생성 (폰트, 크기)
+    font_m = pygame.font.Font(FONT_PATH, 16)
+
     start_ticks = pygame.time.get_ticks()  # 시작 tick을 받아옴
     clock = pygame.time.Clock()  # FPW
 
@@ -41,14 +45,35 @@ def run(size):
     # 못넘어가게 막는 벽 생성
     wall_point_size = 1
     walls = []
-    walls.append(pygame.Rect((zone_rect.x, zone_rect.y), (zone_rect.width, wall_point_size)))
-    walls.append(pygame.Rect((zone_rect.x, zone_rect.y + zone_rect.height), (zone_rect.width, wall_point_size)))
-    walls.append(pygame.Rect((zone_rect.x, zone_rect.y), (wall_point_size, zone_rect.height)))
-    walls.append(pygame.Rect((zone_rect.x + zone_rect.width - 1, zone_rect.y), (wall_point_size, 30)))
     walls.append(
-        pygame.Rect((zone_rect.x + zone_rect.width - 1, zone_rect.y + stage_rect.height + 30), (wall_point_size, 50)))
+        pygame.Rect((zone_rect.x, zone_rect.y), (zone_rect.width, wall_point_size))
+    )
+    walls.append(
+        pygame.Rect(
+            (zone_rect.x, zone_rect.y + zone_rect.height),
+            (zone_rect.width, wall_point_size),
+        )
+    )
+    walls.append(
+        pygame.Rect((zone_rect.x, zone_rect.y), (wall_point_size, zone_rect.height))
+    )
+    walls.append(
+        pygame.Rect(
+            (zone_rect.x + zone_rect.width - 1, zone_rect.y), (wall_point_size, 30)
+        )
+    )
+    walls.append(
+        pygame.Rect(
+            (zone_rect.x + zone_rect.width - 1, zone_rect.y + stage_rect.height + 30),
+            (wall_point_size, 50),
+        )
+    )
     walls.append(pygame.Rect((stage_rect.x, stage_rect.y), (stage_rect.width, 1)))
-    walls.append(pygame.Rect((stage_rect.x, stage_rect.y + stage_rect.height), (stage_rect.width, 1)))
+    walls.append(
+        pygame.Rect(
+            (stage_rect.x, stage_rect.y + stage_rect.height), (stage_rect.width, 1)
+        )
+    )
 
     # 골인지점
     goal_rect = pygame.Rect((1210, 50), (100, 100))
@@ -124,12 +149,31 @@ def run(size):
 
         # clear board
         for index, clear_time in enumerate(clear_times):
-            board_text = board_font.render((f"Stage {str(index + 1).zfill(2)} - {format_time(clear_time)}"), True,
-                                           (255, 255, 255))
+            board_text = board_font.render(
+                (f"Stage {str(index + 1).zfill(2)} - {format_time(clear_time)}"),
+                True,
+                (255, 255, 255),
+            )
             board_background = pygame.Surface(board_text.get_size())
             board_background.fill((0, 0, 0))
             board_background.blit(board_text, (0, 0))
-            screen.blit(board_background, (0, screen.get_height() - board_text.get_height() * (index + 1)))
+            screen.blit(
+                board_background,
+                (0, screen.get_height() - board_text.get_height() * (index + 1)),
+            )
+
+        # text
+        text_stage_status = get_text(
+            f"Stage {stage_index + 1}/{app.stages.__len__()}",
+            fontsize=18,
+            owidth=1.3,
+            ocolor=(255, 255, 255),
+            color=(0, 0, 0),
+            bold=True,
+        )
+        text_position = (screen.get_width() - text_stage_status.get_width(), 0)
+
+        screen.blit(text_stage_status, text_position)
 
         pygame.display.update()  # 게임화면을 다시 그리기! (while 동안 계쏙 돌면서 화면을 다시 그림 필수임!)
 
