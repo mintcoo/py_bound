@@ -15,9 +15,8 @@ def run(size):
     app = Application(size=size, fps=60, title="Bound")
     RESOURCES = app.RESOURCES
     screen = app.screen
-    game_font = pygame.font.Font(FONT_PATH, 30)  # 폰트 객체 생성 (폰트, 크기)
+    game_font = pygame.font.Font(FONT_PATH, 20)  # 폰트 객체 생성 (폰트, 크기)
     board_font = pygame.font.Font(FONT_PATH, 12)  # 폰트 객체 생성 (폰트, 크기)
-    font_m = pygame.font.Font(FONT_PATH, 16)
 
     start_ticks = pygame.time.get_ticks()  # 시작 tick을 받아옴
     clock = pygame.time.Clock()  # FPW
@@ -142,10 +141,14 @@ def run(size):
             character.reset()
             character.set_position([150, 100])
             stage_index += 1
+            if stage_index >= app.stages.__len__():
+                stage_index = app.stages.__len__() - 1
             patterns = pattern_maker.create(pattern_maker.get_stage(stage_index))
             stage = Stage(patterns, app)
             clear_times.append(clear_elapsed_time)
             clear_elapsed_time = 0
+            app.RESOURCES['AUDIO']['clear.mp3'].set_volume(1)
+            app.RESOURCES['AUDIO']['clear.mp3'].play()
 
         # clear board
         for index, clear_time in enumerate(clear_times):
