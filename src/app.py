@@ -78,10 +78,11 @@ def run(size):
     goal_rect = pygame.Rect((1210, 50), (100, 100))
 
     # 패턴 생성
-    pattern_maker = PatternMaker(app)
-    patterns = pattern_maker.create(pattern_maker.get_stage(0))
-    stage = Stage(patterns, app)
     stage_index = 0
+    stage_index = 4
+    pattern_maker = PatternMaker(app)
+    patterns = pattern_maker.create(app.stages[stage_index])
+    stage = Stage(patterns, app)
 
     # ...
     clear_elapsed_time = 0
@@ -138,11 +139,11 @@ def run(size):
 
         # 골지점들어감
         if goal_rect.contains(character.rect):
+            stage_index += 1
             character.reset()
             character.set_position([150, 100])
-            stage_index += 1
             if stage_index >= app.stages.__len__():
-                stage_index = app.stages.__len__() - 1
+                stage_index = 0
             patterns = pattern_maker.create(pattern_maker.get_stage(stage_index))
             stage = Stage(patterns, app)
             clear_times.append(clear_elapsed_time)
