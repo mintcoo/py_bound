@@ -40,6 +40,12 @@ class Application:
                     f"{dirpath}/{filename}"
                 )
 
+        for (dirpath, dirnames, filenames) in os.walk(f"resources/images/zolaman"):
+            for filename in filenames:
+                self.RESOURCES["IMAGE"][f"zolaman/{filename}"] = pygame.image.load(
+                    f"{dirpath}/{filename}"
+                )
+
         for (dirpath, dirnames, filenames) in os.walk(f"resources/music"):
             for filename in filenames:
                 self.RESOURCES["AUDIO"][f"{filename}"] = pygame.mixer.Sound(
