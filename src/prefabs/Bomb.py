@@ -2,8 +2,10 @@ from copy import copy, deepcopy
 
 import pygame
 
+from src.prefabs.GameObject import GameObject
 
-class Bomb:
+
+class Bomb(GameObject):
     def __init__(self, position, app):
         self.app = app
         self.position = position
@@ -65,7 +67,7 @@ class Bomb:
         alpha = 255
         if self.animation_index > 0:
             alpha = (
-                255 * ((self.sprites.__len__() - self.animation_index * 10) + 70) / 100
+                    255 * ((self.sprites.__len__() - self.animation_index * 10) + 70) / 100
             )
 
         self.set_image(self.sprites[self.animation_index])

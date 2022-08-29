@@ -34,6 +34,12 @@ class Application:
                     f"{dirpath}/{filename}"
                 )
 
+        for (dirpath, dirnames, filenames) in os.walk(f"resources/images/monsters"):
+            for filename in filenames:
+                self.RESOURCES["IMAGE"][f"monsters/{filename}"] = pygame.image.load(
+                    f"{dirpath}/{filename}"
+                )
+
         for (dirpath, dirnames, filenames) in os.walk(f"resources/music"):
             for filename in filenames:
                 self.RESOURCES["AUDIO"][f"{filename}"] = pygame.mixer.Sound(

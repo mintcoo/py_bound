@@ -4,7 +4,9 @@ from libs import ptext
 from src.prefabs.Application import Application
 from src.prefabs.PatternMaker import PatternMaker
 from src.prefabs.Player import Player
+from src.prefabs.Snail import Snail
 from src.prefabs.Stage import Stage
+from src.prefabs.ZolaMan import ZolaMan
 from src.utils.constants import FONT_PATH
 from src.utils.pretty_font import get_text
 from src.utils.util import format_time
@@ -22,12 +24,12 @@ def run(size):
     clock = pygame.time.Clock()  # FPW
 
     # 배경음악 설정
-    sound = pygame.mixer.Sound("resources/music/summer.mp3")
-    sound.set_volume(0.4)
-    sound.play(-1)
+    # sound = pygame.mixer.Sound("resources/music/summer.mp3")
+    # sound.set_volume(0.4)
+    # sound.play(-1)
 
     # 이미지 리소스 로드 및 Rect 세팅
-    background = RESOURCES["IMAGE"]["background.png"]
+    background = RESOURCES["IMAGE"]["sky_background.png"]
     zone = RESOURCES["IMAGE"]["zone.png"]
     stage_image = RESOURCES["IMAGE"]["stage.png"]
     zone_rect = pygame.Rect((100, 20), (zone.get_size()))
@@ -40,6 +42,14 @@ def run(size):
     # 캐릭터 생성
     character = Player(app)
     character.set_position((150, 100))
+
+    snail = Snail(app)
+    snail.set_position([800, 700])
+    app.game_objects.append(snail)
+
+    zola = ZolaMan(app)
+    zola.set_position((150, 700))
+    app.game_objects.append(zola)
 
     # 못넘어가게 막는 벽 생성
     wall_point_size = 1
@@ -79,7 +89,7 @@ def run(size):
 
     # 패턴 생성
     stage_index = 0
-    stage_index = 4
+    # stage_index = 4
     pattern_maker = PatternMaker(app)
     patterns = pattern_maker.create(app.stages[stage_index])
     stage = Stage(patterns, app)
@@ -90,6 +100,7 @@ def run(size):
 
     # 이벤트 루프
     app.is_running = True  # 게임이 진행중인가?
+    is_first_update = True
     while app.is_running:
         delta_time = clock.tick(app.fps)  # 게임화면의 초당 프레임수를 설정
         app.set_delta_time(delta_time)
@@ -117,10 +128,15 @@ def run(size):
         character.update()
         stage.update(delta_time)
         for object in app.game_objects:
-            if object.animated:
+            if is_first_update == True:
+                object.start()
+            if hasattr(object, 'animated') and object.animated:
                 app.game_objects.remove(object)
                 continue
             object.update()
+
+        if is_first_update == True:
+            is_first_update = False
 
         # 타이머 업데이트
         elapsed_time = int((pygame.time.get_ticks() - start_ticks))
