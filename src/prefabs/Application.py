@@ -28,25 +28,21 @@ class Application:
         self.load_pattern_files()
 
     def load_resources(self):
+        folders = ['monsters', 'zolaman', 'weapon']
         for (dirpath, dirnames, filenames) in os.walk(f"resources/images"):
             for filename in filenames:
                 self.RESOURCES["IMAGE"][f"{filename}"] = pygame.image.load(
                     f"{dirpath}/{filename}"
                 )
 
-        for (dirpath, dirnames, filenames) in os.walk(f"resources/images/monsters"):
-            for filename in filenames:
-                self.RESOURCES["IMAGE"][f"monsters/{filename}"] = pygame.image.load(
-                    f"{dirpath}/{filename}"
-                )
+        for inner_folder_name in folders:
+            for (dirpath, dirnames, filenames) in os.walk(f"resources/images/{inner_folder_name}"):
+                for filename in filenames:
+                    self.RESOURCES["IMAGE"][f"{inner_folder_name}/{filename}"] = pygame.image.load(
+                        f"{dirpath}/{filename}"
+                    )
 
-        for (dirpath, dirnames, filenames) in os.walk(f"resources/images/zolaman"):
-            for filename in filenames:
-                self.RESOURCES["IMAGE"][f"zolaman/{filename}"] = pygame.image.load(
-                    f"{dirpath}/{filename}"
-                )
-
-        for (dirpath, dirnames, filenames) in os.walk(f"resources/music"):
+        for (dirpath, dirnames, filenames) in os.walk(f"resources/audios"):
             for filename in filenames:
                 self.RESOURCES["AUDIO"][f"{filename}"] = pygame.mixer.Sound(
                     f"{dirpath}/{filename}"

@@ -12,25 +12,43 @@ class Snail(GameObject):
     sprites_delay = 10
     sprites_delay_count = sprites_delay
     status = "neutral"
+    is_death_ready = False
 
     def __init__(self, app):
         self.app = app
-        self.set_sheets()
+        self.set_sheet('move')
 
-    def set_sheets(self):
+    def reset(self):
+        self.sheet_index = 0
+        self.sprites_delay_count = self.sprites_delay
+
+    def set_sheet(self, status):
         RESOURCES = self.app.RESOURCES
-        move_sheet = SpriteSheet(RESOURCES["IMAGE"]["monsters/snail_move.png"])
-        death_sheet = RESOURCES["IMAGE"]["monsters/snail_move.png"]
+
+        self.reset()
+        sheet = None
+        width, height = 0, 0
+
+        if status == 'move':
+            sheet = SpriteSheet(RESOURCES["IMAGE"]["monsters/snail_move.png"])
+            width, height = 37, 26
+        if status == 'death':
+            self.is_death_ready = True
+            sheet = SpriteSheet(RESOURCES["IMAGE"]["monsters/snail_death.png"])
+            width, height = 45, 33
 
         self.sprites = [
-            move_sheet.image_at((37 * 0, 0, 37, 26)),
-            move_sheet.image_at((37 * 1, 0, 37, 26)),
-            move_sheet.image_at((37 * 2, 0, 37, 26)),
-            move_sheet.image_at((37 * 3, 0, 37, 26)),
-            move_sheet.image_at((37 * 4, 0, 37, 26)),
+            sheet.image_at((width * 0, 0, width, height)),
+            sheet.image_at((width * 1, 0, width, height)),
+            sheet.image_at((width * 2, 0, width, height)),
+            sheet.image_at((width * 3, 0, width, height)),
+            sheet.image_at((width * 4, 0, width, height)),
         ]
         self.image = self.sprites[0]
         self.rect = self.sprites[0].get_rect()
+
+    def destroy(self):
+        self.app.game_objects.remove(self)
 
     def set_position(self, position):
         self.position = position
@@ -42,21 +60,19 @@ class Snail(GameObject):
         self.rect.top = self.position[1] - self.rect.size[1] / 2
 
     def update_sprite(self):
-        if self.status == '1neutral':
-            self.sheet_index = 0
-            self.image = self.sprites[self.sheet_index]
-            self.sprites_delay_count = self.sprites_delay
-            return
-
         self.sprites_delay_count -= 1
         if self.sprites_delay_count == 0:
             self.sheet_index += 1
             if self.sheet_index >= self.sprites.__len__():
                 self.sheet_index = 0
+                if self.is_death_ready:
+                    self.destroy()
+
             self.image = self.sprites[self.sheet_index]
             self.sprites_delay_count = self.sprites_delay
 
     def start(self):
+        super().start()
         [zolaman] = list(filter(lambda instance: instance.__class__.__name__ == 'ZolaMan', self.app.game_objects))
         self.zolaman = zolaman
 

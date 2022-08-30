@@ -4,6 +4,7 @@ import pygame
 class GameObject:
     name = None
     tags = []
+    is_start_function_called = False
 
     def __init__(self):
         pass
@@ -12,4 +13,4 @@ class GameObject:
         pass
 
     def start(self):
-        pass
+        self.is_start_function_called = True

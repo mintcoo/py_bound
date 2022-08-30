@@ -34,6 +34,8 @@ def run(size):
     stage_image = RESOURCES["IMAGE"]["stage.png"]
     zone_rect = pygame.Rect((100, 20), (zone.get_size()))
     stage_rect = pygame.Rect((400, 50), (stage_image.get_size()))
+    monster_create_event = pygame.USEREVENT + 1
+    pygame.time.set_timer(monster_create_event, 3000)
 
     ############################
     # Object 준비
@@ -42,10 +44,6 @@ def run(size):
     # 캐릭터 생성
     character = Player(app)
     character.set_position((150, 100))
-
-    snail = Snail(app)
-    snail.set_position([800, 700])
-    app.game_objects.append(snail)
 
     zola = ZolaMan(app)
     zola.set_position((150, 700))
@@ -101,6 +99,12 @@ def run(size):
     # 이벤트 루프
     app.is_running = True  # 게임이 진행중인가?
     is_first_update = True
+
+    def spawn_monster():
+        snail = Snail(app)
+        snail.set_position([800, 700])
+        app.game_objects.append(snail)
+
     while app.is_running:
         delta_time = clock.tick(app.fps)  # 게임화면의 초당 프레임수를 설정
         app.set_delta_time(delta_time)
@@ -110,6 +114,8 @@ def run(size):
         for event in pygame.event.get():  # 어떤 이벤트가 발생하였는가?
             if event.type == pygame.QUIT:  # 오른쪽위에 창을 끄는  이벤트가 발생하였으면?
                 app.is_running = False  # 게임이 진행중이 아님
+            if event.type == monster_create_event:
+                spawn_monster()
             character.mouse.on_event(event)
 
         # 화면 업데이트
@@ -128,7 +134,7 @@ def run(size):
         character.update()
         stage.update(delta_time)
         for object in app.game_objects:
-            if is_first_update == True:
+            if object.is_start_function_called == False:
                 object.start()
             if hasattr(object, 'animated') and object.animated:
                 app.game_objects.remove(object)
